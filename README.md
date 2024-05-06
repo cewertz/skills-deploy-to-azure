@@ -14,10 +14,13 @@ _Create two deployment workflows using GitHub Actions and Microsoft Azure._
 </header>
 
 <!--
+
   <<< Author notes: Step 2 >>>
+
   Start this step by acknowledging the previous step.
   Define terms and link to docs.github.com.
 -->
+
 
 ## Step 2: Set up an Azure environment
 
@@ -118,6 +121,7 @@ env:
 
 jobs:
   build:
+
     if: contains(github.event.pull_request.labels.*.name, 'stage')
 
     runs-on: ubuntu-latest
@@ -181,9 +185,7 @@ jobs:
       - name: "Login via Azure CLI"
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - uses: azure/docker-login@v1
         with:
@@ -195,6 +197,7 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{env.AZURE_WEBAPP_NAME}}
+
           images: ${{env.IMAGE_REGISTRY_URL}}/${{ github.repository }}/${{env.DOCKER_IMAGE_NAME}}:${{ github.sha }}
 
       - name: Azure logout via Azure CLI
